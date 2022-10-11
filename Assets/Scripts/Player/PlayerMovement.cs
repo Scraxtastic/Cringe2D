@@ -9,12 +9,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpForce = 5;
     [SerializeField] private float maxSpeedX = 10f;
     [SerializeField] private float maxSpeedY = 10f;
+    [SerializeField] private float maxFallSpeedForJump = 5;
 
     private PlayerController playerControls;
     private PlayerController.MovementActions movement;
     private Rigidbody2D rigidbody;
     private bool isGrounded = false;
-    private bool isJumping = false;
+    private bool isJumping = false;    
 
     private void Start()
     {
@@ -40,11 +41,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector2 speedVec = new Vector2();
-        speedVec.x -= speed * movement.Left.ReadValue<float>();
-        speedVec.x += speed * movement.Right.ReadValue<float>();
-        rigidbody.velocity += speedVec * Time.deltaTime;
-        FixSpeed();
+        AddMoveSpeed();
+        LimitSpeed();
         //rigidbody.position += speedVec * Time.deltaTime;
         if (!isJumping && isGrounded && movement.Jump.ReadValue<float>() > 0.5f)
         {
@@ -58,9 +56,21 @@ public class PlayerMovement : MonoBehaviour
             }
             isGrounded = false;
         }
+        if (rigidbody.velocity.y < maxFallSpeedForJump)
+        {
+            isJumping = true;
+        }
     }
 
-    private void FixSpeed()
+    private void AddMoveSpeed()
+    {
+        Vector2 speedVec = new Vector2();
+        speedVec.x -= speed * movement.Left.ReadValue<float>();
+        speedVec.x += speed * movement.Right.ReadValue<float>();
+        rigidbody.velocity += speedVec * Time.deltaTime;
+    }
+
+    private void LimitSpeed()
     {
         if (rigidbody.velocity.x > maxSpeedX)
         {
@@ -82,9 +92,18 @@ public class PlayerMovement : MonoBehaviour
         isJumping = true;
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if (!isJumping && collision.otherCollider.name.Equals("Feet"))
-            isGrounded = true;
+        Debug.Log(collision.CompareTag("Map"));
+        //if (!isJumping && collision.otherCollider.name.Equals("Feet"))
+        //{
+        //    isGrounded = true;
+        //    isJumping = false;
+        //}
+
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        
     }
 }
