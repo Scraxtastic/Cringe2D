@@ -20,6 +20,12 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
+        PlayerGroundedHandler[] handlers = GetComponentsInChildren<PlayerGroundedHandler>();
+        foreach (PlayerGroundedHandler handler in handlers)
+        {
+            handler.rb2D = rigidbody;
+            handler.OnGrounded += OnGrounded;
+        }
     }
     private void Awake()
     {
@@ -92,18 +98,9 @@ public class PlayerMovement : MonoBehaviour
         isJumping = true;
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnGrounded()
     {
-        Debug.Log(collision.CompareTag("Map"));
-        //if (!isJumping && collision.otherCollider.name.Equals("Feet"))
-        //{
-        //    isGrounded = true;
-        //    isJumping = false;
-        //}
-
-    }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        
+        isGrounded = true;
+        isJumping = false;
     }
 }
