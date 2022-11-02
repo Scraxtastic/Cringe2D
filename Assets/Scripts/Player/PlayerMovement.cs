@@ -5,17 +5,19 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float speed = 5f;
+    [SerializeField] private float acceleration = 5f;
     [SerializeField] private float jumpForce = 5;
     [SerializeField] private float maxSpeedX = 10f;
     [SerializeField] private float maxSpeedY = 10f;
     [SerializeField] private float maxFallSpeedForJump = 5;
+    [SerializeField] private float keepSpeedValue = 0.8f;
 
     private PlayerController playerControls;
     private PlayerController.MovementActions movement;
     private Rigidbody2D rigidbody;
     private bool isGrounded = false;
-    private bool isJumping = false;    
+    private bool isJumping = false;
+    private float keepSpeed = 1;
 
     private void Start()
     {
@@ -23,7 +25,8 @@ public class PlayerMovement : MonoBehaviour
         PlayerGroundedHandler[] handlers = GetComponentsInChildren<PlayerGroundedHandler>();
         foreach (PlayerGroundedHandler handler in handlers)
         {
-            handler.rb2D = rigidbody;
+            Debug.Log("Added Rigidbody to: " + handler.name );
+            handler.rigidbody = rigidbody;
             handler.OnGrounded += OnGrounded;
         }
     }
@@ -70,10 +73,27 @@ public class PlayerMovement : MonoBehaviour
 
     private void AddMoveSpeed()
     {
+        float leftValue = movement.Left.ReadValue<float>();
+        float rightValue = movement.Right.ReadValue<float>();
         Vector2 speedVec = new Vector2();
-        speedVec.x -= speed * movement.Left.ReadValue<float>();
-        speedVec.x += speed * movement.Right.ReadValue<float>();
-        rigidbody.velocity += speedVec * Time.deltaTime;
+        speedVec.x -= acceleration * leftValue;
+        speedVec.x += acceleration * rightValue;
+        if (speedVec.x != 0)
+        {
+            keepSpeed = 1;
+        }
+        else
+        {
+            keepSpeed *= keepSpeedValue;
+            if (keepSpeed < 0.01f)
+            {
+                keepSpeed = 0;
+            }
+        }
+        Vector2 vel = rigidbody.velocity;
+        vel.x *= keepSpeed;
+        rigidbody.velocity = vel + speedVec * Time.deltaTime;
+        Debug.Log(rigidbody.velocity);
     }
 
     private void LimitSpeed()
@@ -93,6 +113,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Jump()
     {
+        rigidbody.velocity = new Vector3(rigidbody.velocity.x, 0);
         rigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         isGrounded = false;
         isJumping = true;
