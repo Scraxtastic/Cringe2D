@@ -15,12 +15,14 @@ public class PlayerMovement : MonoBehaviour
     private PlayerController playerControls;
     private PlayerController.MovementActions movement;
     private Rigidbody2D rigidbody;
+    private SpriteRenderer sprite;
     private bool isGrounded = false;
     private bool isJumping = false;
     private float keepSpeed = 1;
 
     private void Start()
     {
+        sprite = GetComponent<SpriteRenderer>();
         rigidbody = GetComponent<Rigidbody2D>();
         PlayerGroundedHandler[] handlers = GetComponentsInChildren<PlayerGroundedHandler>();
         foreach (PlayerGroundedHandler handler in handlers)
@@ -93,6 +95,13 @@ public class PlayerMovement : MonoBehaviour
         Vector2 vel = rigidbody.velocity;
         vel.x *= keepSpeed;
         rigidbody.velocity = vel + speedVec * Time.deltaTime;
+        if(speedVec.x > 0)
+        {
+            sprite.flipX = false;
+        }else if(speedVec.x < 0)
+        {
+            sprite.flipX = true;
+        }
         Debug.Log(rigidbody.velocity);
     }
 
