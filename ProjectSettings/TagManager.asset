@@ -6,11 +6,12 @@ TagManager:
   tags:
   - Map
   - Enemy
+  - Platform
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Dev ONLY
   - Water
   - UI
   - 

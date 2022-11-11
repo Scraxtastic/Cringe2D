@@ -17,7 +17,7 @@ public class PlayerGroundedHandler : MonoBehaviour
         OnGrounded?.Invoke();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         Vector2 dir = Vector2.up;
         switch (direction)
@@ -38,11 +38,10 @@ public class PlayerGroundedHandler : MonoBehaviour
         if (rigidbody == null) return;
         // Cast a ray straight down.
         RaycastHit2D hit = Physics2D.Raycast(transform.position, dir);
-
+        Debug.DrawRay(transform.position, dir, Color.yellow);
         // If it hits something...
         if (hit.collider != null)
         {
-            Debug.Log("Hit something");
             float distance = Mathf.Abs(hit.point.y - transform.position.y);
             if (distance < maxHeight)
             {

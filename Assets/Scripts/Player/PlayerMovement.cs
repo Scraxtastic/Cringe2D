@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float maxSpeedY = 10f;
     [SerializeField] private float maxFallSpeedForJump = 5;
     [SerializeField] private float keepSpeedValue = 0.8f;
+    [SerializeField] private float gravityScale = 10;
 
     private PlayerController playerControls;
     private PlayerController.MovementActions movement;
@@ -122,6 +123,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Jump()
     {
+        rigidbody.gravityScale = gravityScale;
         rigidbody.velocity = new Vector3(rigidbody.velocity.x, 0);
         rigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         isGrounded = false;
