@@ -38,15 +38,28 @@ public class PlayerGroundedHandler : MonoBehaviour
         if (rigidbody == null) return;
         // Cast a ray straight down.
         RaycastHit2D hit = Physics2D.Raycast(transform.position, dir);
-        Debug.DrawRay(transform.position, dir, Color.yellow);
         // If it hits something...
         if (hit.collider != null)
         {
             float distance = Mathf.Abs(hit.point.y - transform.position.y);
-            if (distance < maxHeight)
+            if (distance > maxHeight)
             {
-                InvokeOnGrounded();
+                Vector2 added = dir * maxHeight;
+                Vector3 maxPosition = transform.position + new Vector3(added.x, added.y, 0);
+                Debug.DrawLine(transform.position, maxPosition, Color.yellow);
+                return;
             }
+            foreach (string tag in tagsForActivation)
+            {
+                if (hit.collider.gameObject.CompareTag(tag))
+                {
+                    Debug.DrawLine(transform.position, hit.point, Color.green);
+                    InvokeOnGrounded();
+                    return;
+                }
+            }
+            Debug.DrawLine(transform.position, hit.point, Color.yellow);
+
         }
     }
 

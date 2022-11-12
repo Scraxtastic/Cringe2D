@@ -28,8 +28,8 @@ public class PlayerMovement : MonoBehaviour
         PlayerGroundedHandler[] handlers = GetComponentsInChildren<PlayerGroundedHandler>();
         foreach (PlayerGroundedHandler handler in handlers)
         {
-            Debug.Log("Added Rigidbody to: " + handler.name );
             handler.rigidbody = rigidbody;
+            handler.maxHeight = 0.015f;
             handler.OnGrounded += OnGrounded;
         }
     }
@@ -103,7 +103,6 @@ public class PlayerMovement : MonoBehaviour
         {
             sprite.flipX = true;
         }
-        Debug.Log(rigidbody.velocity);
     }
 
     private void LimitSpeed()
