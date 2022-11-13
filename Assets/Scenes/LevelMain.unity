@@ -796,6 +796,8 @@ MonoBehaviour:
   maxFallSpeedForJump: 5
   keepSpeedValue: 0.99
   gravityScale: 10
+  hasDoubleJump: 0
+  hasDash: 0
 --- !u!4 &7838603308127042449
 Transform:
   m_ObjectHideFlags: 0
@@ -928,6 +930,7 @@ GameObject:
   - component: {fileID: 7838603308127042448}
   - component: {fileID: 7838603308127042455}
   - component: {fileID: 2138912178}
+  - component: {fileID: 7838603308127042462}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -935,6 +938,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &7838603308127042462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7838603308127042461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b75ff9ba415c6914f8d0dc0084b10ef9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  smallestY: -100
 --- !u!4 &8021571796050359097
 Transform:
   m_ObjectHideFlags: 0

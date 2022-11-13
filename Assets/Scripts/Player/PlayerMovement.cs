@@ -5,13 +5,25 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+    /**
+     * TODO: for some time i am bored and want to fix a bit of a mess.
+     * Update => check how to move
+     * FixedUpdate => perform movement
+     * 
+     */
     [SerializeField] private float acceleration = 5f;
     [SerializeField] private float jumpForce = 5;
     [SerializeField] private float maxSpeedX = 10f;
     [SerializeField] private float maxSpeedY = 10f;
-    [SerializeField] private float maxFallSpeedForJump = 5;
     [SerializeField] private float keepSpeedValue = 0.8f;
     [SerializeField] private float gravityScale = 10;
+    [SerializeField] private bool hasJump = false;
+    [SerializeField] private bool hasDoubleJump = false;
+    [SerializeField] private bool hasDash = false;
+    [SerializeField] private float dashDistance = 10;
+    [SerializeField] private float dashDuration = 0.5f;
+    [SerializeField] private float dashCooldown = 1f;
+    [SerializeField] private float groundedSpeedDelta = .001f;
 
     private PlayerController playerControls;
     private PlayerController.MovementActions movement;
@@ -19,6 +31,11 @@ public class PlayerMovement : MonoBehaviour
     private SpriteRenderer sprite;
     private bool isGrounded = false;
     private bool isJumping = false;
+    private bool usedDoubleJump = false;
+    private bool isDashing = false;
+    private bool canDash = false;
+    private float lastDashTime = 0;
+
     private float keepSpeed = 1;
 
     private void Start()
@@ -32,11 +49,6 @@ public class PlayerMovement : MonoBehaviour
             handler.maxHeight = 0.015f;
             handler.OnGrounded += OnGrounded;
         }
-    }
-    private void Awake()
-    {
-        //Testing lol
-        //playerControls = new PlayerController();
     }
 
     private void OnEnable()
@@ -53,19 +65,18 @@ public class PlayerMovement : MonoBehaviour
         playerControls.Disable();
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         AddMoveSpeed();
         LimitSpeed();
-        //rigidbody.position += speedVec * Time.deltaTime;
-        Debug.developerConsoleVisible = true;
-        if (!isJumping && isGrounded && movement.Jump.ReadValue<float>() > 0.5f)
-        {
-            Jump();
-        }
-        if(rigidbody.velocity.y < 0)
+        CheckJump();
+        if (rigidbody.velocity.y <= 0)
         {
             isJumping = false;
+        }
+
+        if (Mathf.Abs(rigidbody.velocity.y) > groundedSpeedDelta)
+        {
             isGrounded = false;
         }
     }
@@ -92,10 +103,11 @@ public class PlayerMovement : MonoBehaviour
         Vector2 vel = rigidbody.velocity;
         vel.x *= keepSpeed;
         rigidbody.velocity = vel + speedVec * Time.deltaTime;
-        if(speedVec.x > 0)
+        if (speedVec.x > 0)
         {
             sprite.flipX = false;
-        }else if(speedVec.x < 0)
+        }
+        else if (speedVec.x < 0)
         {
             sprite.flipX = true;
         }
@@ -116,6 +128,35 @@ public class PlayerMovement : MonoBehaviour
             rigidbody.velocity = new Vector2(rigidbody.velocity.x, -maxSpeedY);
         }
     }
+
+    private void CheckJump()
+    {
+        if (!hasJump) return;
+        Vector3 now = transform.position;
+        if (isGrounded)
+        {
+            if (isJumping) return;
+            Debug.DrawLine(now, new Vector3(now.x + 5, now.y), Color.green);
+            if (movement.Jump.ReadValue<float>() < 0.5f) return;
+            Debug.DrawLine(now, new Vector3(now.x + 5, now.y + .1f), Color.blue);
+            Jump();
+            usedDoubleJump = false;
+        }
+        else
+        {
+            Debug.DrawLine(now, new Vector3(now.x + 5, now.y), Color.red);
+            CheckDoubleJump();
+        }
+    }
+
+    private void CheckDoubleJump()
+    {
+        if (!movement.Jump.triggered || !movement.Jump.IsPressed()) return;
+        if (!hasDoubleJump) return;
+        if (usedDoubleJump) return;
+        usedDoubleJump = true;
+        Jump();
+    }
     private void Jump()
     {
         rigidbody.gravityScale = gravityScale;
@@ -128,5 +169,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnGrounded()
     {
         isGrounded = true;
+        if (rigidbody.velocity.y > groundedSpeedDelta) return;
+        usedDoubleJump = false;
     }
 }
