@@ -35,11 +35,13 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Awake()
     {
-        playerControls = new PlayerController();
+        //Testing lol
+        //playerControls = new PlayerController();
     }
 
     private void OnEnable()
     {
+        playerControls = new PlayerController();
         playerControls.Enable();
         movement = playerControls.Movement;
         movement.Enable();
@@ -56,21 +58,15 @@ public class PlayerMovement : MonoBehaviour
         AddMoveSpeed();
         LimitSpeed();
         //rigidbody.position += speedVec * Time.deltaTime;
+        Debug.developerConsoleVisible = true;
         if (!isJumping && isGrounded && movement.Jump.ReadValue<float>() > 0.5f)
         {
             Jump();
         }
         if(rigidbody.velocity.y < 0)
         {
-            if (isJumping)
-            {
-                isJumping = false;
-            }
+            isJumping = false;
             isGrounded = false;
-        }
-        if (rigidbody.velocity.y < maxFallSpeedForJump)
-        {
-            isJumping = true;
         }
     }
 
@@ -132,6 +128,5 @@ public class PlayerMovement : MonoBehaviour
     private void OnGrounded()
     {
         isGrounded = true;
-        isJumping = false;
     }
 }
