@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Forest_deco_covers(ice)_0
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: 21300000, guid: 019355d90503eaf449da0b4765ccec4b, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.10598152, g: 0.4528302, b: 0, a: 1}
   m_Transform:
     e00: 1
     e01: 0

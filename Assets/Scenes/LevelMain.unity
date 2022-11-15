@@ -654,7 +654,6 @@ MonoBehaviour:
   - Map
   - Platform
   maxHeight: 0.015
-  rigidbody: {fileID: 0}
 --- !u!1 &5517944348309776738
 GameObject:
   m_ObjectHideFlags: 0
@@ -688,7 +687,6 @@ MonoBehaviour:
   - Map
   - Platform
   maxHeight: 0.015
-  rigidbody: {fileID: 0}
 --- !u!1 &7652800021820199793
 GameObject:
   m_ObjectHideFlags: 0
@@ -793,11 +791,15 @@ MonoBehaviour:
   jumpForce: 35
   maxSpeedX: 13
   maxSpeedY: 25
-  maxFallSpeedForJump: 5
   keepSpeedValue: 0.99
   gravityScale: 10
-  hasDoubleJump: 0
-  hasDash: 0
+  hasJump: 1
+  hasDoubleJump: 1
+  hasDash: 1
+  dashDistance: 20
+  dashDuration: 0.3
+  dashCooldown: 1
+  groundedSpeedDelta: 0.001
 --- !u!4 &7838603308127042449
 Transform:
   m_ObjectHideFlags: 0
@@ -806,7 +808,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7838603308127042461}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 19.86, y: 2.05, z: 0}
+  m_LocalPosition: {x: 47, y: 66.3, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -1068,4 +1070,3 @@ MonoBehaviour:
   - Map
   - Platform
   maxHeight: 0.015
-  rigidbody: {fileID: 0}

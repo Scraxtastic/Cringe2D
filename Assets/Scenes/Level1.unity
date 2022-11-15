@@ -251,7 +251,6 @@ MonoBehaviour:
   tagsForActivation:
   - Player
   maxHeight: 1
-  rigidbody: {fileID: 0}
 --- !u!212 &448917946
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -452,7 +451,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dropDelay: 0
-  dropSpeed: 2
+  dropSpeed: 20
   range: 100
 --- !u!1 &1485218387
 GameObject:
@@ -503,7 +502,6 @@ MonoBehaviour:
   tagsForActivation:
   - Player
   maxHeight: 1
-  rigidbody: {fileID: 0}
 --- !u!212 &1485218390
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2107,9 +2105,9 @@ Tilemap:
   - m_RefCount: 0
     m_Data: {r: NaN, g: NaN, b: NaN, a: NaN}
   - m_RefCount: 66
-    m_Data: {r: 1, g: 1, b: 1, a: 1}
+    m_Data: {r: 0.10598152, g: 0.4528302, b: 0, a: 1}
   - m_RefCount: 0
-    m_Data: {r: 4.0156e-41, g: 4.0156e-41, b: 4.0156e-41, a: 4.0156e-41}
+    m_Data: {r: 4.0172e-41, g: 4.0172e-41, b: 4.0172e-41, a: 4.0172e-41}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}

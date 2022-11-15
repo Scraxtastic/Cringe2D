@@ -7,17 +7,14 @@ public class SpikeDrop : MonoBehaviour
     [SerializeField] private float dropDelay = 0f;
     [SerializeField] private float dropSpeed = 1f;
     [SerializeField] private float range = 100;
-    private Rigidbody2D rigidbody;
 
     private bool isDropping = false;
     private float dropStart = float.MaxValue;
     private void Start()
     {
-        rigidbody = GetComponent<Rigidbody2D>();
         PlayerGroundedHandler[] handlers = GetComponentsInChildren<PlayerGroundedHandler>();
         foreach (PlayerGroundedHandler handler in handlers)
         {
-            handler.rigidbody = rigidbody;
             handler.maxHeight = range;
             handler.OnGrounded += OnGrounded;
         }
@@ -41,16 +38,17 @@ public class SpikeDrop : MonoBehaviour
 
     public void Drop()
     {
-        rigidbody.gravityScale = dropSpeed;
-        dropStart = float.MaxValue;
+        Vector3 pos = transform.position;
+        pos.y -= dropSpeed * Time.deltaTime;
+        transform.position = pos;
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Destroy(this.gameObject);
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
-        {
-            Debug.Log("Currently just destroys the spike (further mechanics not yet known :c)");
-            Destroy(this.gameObject);
-        }
+        Destroy(this.gameObject);
     }
 }

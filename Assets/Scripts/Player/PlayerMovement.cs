@@ -5,12 +5,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    /**
-     * TODO: for some time i am bored and want to fix a bit of a mess.
-     * Update => check how to move
-     * FixedUpdate => perform movement
-     * 
-     */
     [SerializeField] private float acceleration = 5f;
     [SerializeField] private float jumpForce = 5;
     [SerializeField] private float maxSpeedX = 10f;
@@ -33,8 +27,9 @@ public class PlayerMovement : MonoBehaviour
     private bool isJumping = false;
     private bool usedDoubleJump = false;
     private bool isDashing = false;
-    private bool canDash = false;
     private float lastDashTime = 0;
+    private float dashStartTime = 0;
+    private bool dashLeft = true;
 
     private float keepSpeed = 1;
 
@@ -45,7 +40,6 @@ public class PlayerMovement : MonoBehaviour
         PlayerGroundedHandler[] handlers = GetComponentsInChildren<PlayerGroundedHandler>();
         foreach (PlayerGroundedHandler handler in handlers)
         {
-            handler.rigidbody = rigidbody;
             handler.maxHeight = 0.015f;
             handler.OnGrounded += OnGrounded;
         }
@@ -79,6 +73,8 @@ public class PlayerMovement : MonoBehaviour
         {
             isGrounded = false;
         }
+        CheckDash();
+        Dash();
     }
 
     private void AddMoveSpeed()
@@ -136,9 +132,7 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded)
         {
             if (isJumping) return;
-            Debug.DrawLine(now, new Vector3(now.x + 5, now.y), Color.green);
             if (movement.Jump.ReadValue<float>() < 0.5f) return;
-            Debug.DrawLine(now, new Vector3(now.x + 5, now.y + .1f), Color.blue);
             Jump();
             usedDoubleJump = false;
         }
@@ -164,6 +158,45 @@ public class PlayerMovement : MonoBehaviour
         rigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         isGrounded = false;
         isJumping = true;
+    }
+
+    private void CheckDash()
+    {
+        if (!hasDash) return;
+        if (isDashing) return;
+        if (Time.time < lastDashTime + dashCooldown) return;
+        if (!movement.Dash.triggered) return;
+        if (movement.Dash.ReadValue<float>() < 0.5f) return;
+        StartDash();
+    }
+
+    private void StartDash()
+    {
+        isDashing = true;
+        dashStartTime = Time.time;
+        dashLeft = sprite.flipX;
+    }
+
+    private void Dash()
+    {
+        if (!isDashing) return;
+        if (Time.time > dashStartTime + dashDuration)
+        {
+            isDashing = false;
+            return;
+        }
+        float dashSpeed = dashDistance / dashDuration;
+        Vector2 speed = new Vector3();
+        if (dashLeft)
+        {
+            speed.x -= dashSpeed;
+        }
+        else
+        {
+            speed.x += dashSpeed;
+        }
+        rigidbody.velocity += speed;
+        lastDashTime = Time.time;
     }
 
     private void OnGrounded()

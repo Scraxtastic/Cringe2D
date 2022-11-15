@@ -10,7 +10,6 @@ public class PlayerGroundedHandler : MonoBehaviour
     [SerializeField] private Directions direction = Directions.Down;
     [SerializeField] private string[] tagsForActivation = new string[] { "Map" };
     [SerializeField] public float maxHeight;
-    [HideInInspector] public Rigidbody2D rigidbody;
     public event Action OnGrounded;
     protected void InvokeOnGrounded()
     {
@@ -35,7 +34,6 @@ public class PlayerGroundedHandler : MonoBehaviour
                 dir = Vector2.right;
                 break;
         }
-        if (rigidbody == null) return;
         // Cast a ray straight down.
         RaycastHit2D hit = Physics2D.Raycast(transform.position, dir);
         // If it hits something...
