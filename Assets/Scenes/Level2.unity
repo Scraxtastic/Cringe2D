@@ -185,7 +185,7 @@ GameObject:
   - component: {fileID: 511051889}
   - component: {fileID: 511051888}
   m_Layer: 0
-  m_Name: Spikes
+  m_Name: Level2_Spikes
   m_TagString: Spike
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -458,7 +458,7 @@ GameObject:
   - component: {fileID: 1535727390}
   - component: {fileID: 1535727389}
   m_Layer: 0
-  m_Name: Level_Platforms
+  m_Name: Level2_Platforms
   m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -749,7 +749,7 @@ GameObject:
   - component: {fileID: 1595867274}
   - component: {fileID: 1595867273}
   m_Layer: 0
-  m_Name: Level
+  m_Name: Level2
   m_TagString: Map
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
