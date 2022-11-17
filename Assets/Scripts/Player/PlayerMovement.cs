@@ -5,19 +5,25 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float acceleration = 5f;
-    [SerializeField] private float jumpForce = 5;
-    [SerializeField] private float maxSpeedX = 10f;
-    [SerializeField] private float maxSpeedY = 10f;
-    [SerializeField] private float keepSpeedValue = 0.8f;
+    [SerializeField] private float acceleration = 70f;
+    [SerializeField] private float jumpForce = 35;
+    [SerializeField] private float maxSpeedX = 13f;
+    [SerializeField] private float maxFallspeed = 25f;
+    [SerializeField] private float keepSpeedValue = 0.99f;
     [SerializeField] private float gravityScale = 10;
     [SerializeField] private bool hasJump = false;
     [SerializeField] private bool hasDoubleJump = false;
     [SerializeField] private bool hasDash = false;
-    [SerializeField] private float dashDistance = 10;
-    [SerializeField] private float dashDuration = 0.5f;
+    [SerializeField] private float dashDistance = 5;
+    [SerializeField] private float dashDuration = 0.1f;
     [SerializeField] private float dashCooldown = 1f;
     [SerializeField] private float groundedSpeedDelta = .001f;
+    [SerializeField] private bool dashDeniesGravity = true;
+    [SerializeField] private bool dashDeniesJump = true;
+    [SerializeField] private bool dashDeniesDoubleJump = true;
+    [SerializeField] private bool dashDeniesYVelocity = true;
+    [SerializeField] private bool dashDeniesXVelocity = true;
+    [SerializeField] private bool dashDeniesXAcceleration = true;
 
     private PlayerController playerControls;
     private PlayerController.MovementActions movement;
@@ -37,6 +43,7 @@ public class PlayerMovement : MonoBehaviour
     {
         sprite = GetComponent<SpriteRenderer>();
         rigidbody = GetComponent<Rigidbody2D>();
+        rigidbody.gravityScale = gravityScale;
         PlayerGroundedHandler[] handlers = GetComponentsInChildren<PlayerGroundedHandler>();
         foreach (PlayerGroundedHandler handler in handlers)
         {
@@ -98,7 +105,9 @@ public class PlayerMovement : MonoBehaviour
         }
         Vector2 vel = rigidbody.velocity;
         vel.x *= keepSpeed;
-        rigidbody.velocity = vel + speedVec * Time.deltaTime;
+        //if objects can move player, the dash shouldn't set the x velocity (might cause problems)
+        if (!isDashing && dashDeniesXAcceleration)
+            rigidbody.velocity = vel + speedVec;// * Time.deltaTime;
         if (speedVec.x > 0)
         {
             sprite.flipX = false;
@@ -119,14 +128,15 @@ public class PlayerMovement : MonoBehaviour
         {
             rigidbody.velocity = new Vector2(-maxSpeedX, rigidbody.velocity.y);
         }
-        if (rigidbody.velocity.y < -maxSpeedY)
+        if (rigidbody.velocity.y < -maxFallspeed)
         {
-            rigidbody.velocity = new Vector2(rigidbody.velocity.x, -maxSpeedY);
+            rigidbody.velocity = new Vector2(rigidbody.velocity.x, -maxFallspeed);
         }
     }
 
     private void CheckJump()
     {
+        if (isDashing && dashDeniesJump) return;
         if (!hasJump) return;
         Vector3 now = transform.position;
         if (isGrounded)
@@ -145,6 +155,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckDoubleJump()
     {
+        if (isDashing && dashDeniesDoubleJump) return;
         if (!movement.Jump.triggered || !movement.Jump.IsPressed()) return;
         if (!hasDoubleJump) return;
         if (usedDoubleJump) return;
@@ -175,6 +186,12 @@ public class PlayerMovement : MonoBehaviour
         isDashing = true;
         dashStartTime = Time.time;
         dashLeft = sprite.flipX;
+        if (dashDeniesGravity)
+            rigidbody.gravityScale = 0;
+        if (dashDeniesYVelocity)
+            rigidbody.velocity = new Vector2(rigidbody.velocity.x, 0);
+        if (dashDeniesXVelocity)
+            rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
     }
 
     private void Dash()
@@ -182,6 +199,7 @@ public class PlayerMovement : MonoBehaviour
         if (!isDashing) return;
         if (Time.time > dashStartTime + dashDuration)
         {
+            rigidbody.gravityScale = gravityScale;
             isDashing = false;
             return;
         }

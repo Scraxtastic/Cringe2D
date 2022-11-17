@@ -10,6 +10,7 @@ public class SpikeDrop : MonoBehaviour
 
     private bool isDropping = false;
     private float dropStart = float.MaxValue;
+    private Rigidbody2D rigidbody;
     private void Start()
     {
         PlayerGroundedHandler[] handlers = GetComponentsInChildren<PlayerGroundedHandler>();
@@ -18,6 +19,7 @@ public class SpikeDrop : MonoBehaviour
             handler.maxHeight = range;
             handler.OnGrounded += OnGrounded;
         }
+        rigidbody = GetComponent<Rigidbody2D>();
     }
 
     public void OnGrounded()
@@ -38,9 +40,7 @@ public class SpikeDrop : MonoBehaviour
 
     public void Drop()
     {
-        Vector3 pos = transform.position;
-        pos.y -= dropSpeed * Time.deltaTime;
-        transform.position = pos;
+        rigidbody.velocity = new Vector2(0, -dropSpeed);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
