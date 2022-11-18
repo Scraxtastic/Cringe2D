@@ -39,7 +39,7 @@ public class PlayerGroundedHandler : MonoBehaviour
         // If it hits something...
         if (hit.collider != null)
         {
-            float distance = Mathf.Abs(hit.point.y - transform.position.y);
+            float distance = Mathf.Sqrt(Mathf.Pow(hit.point.y - transform.position.y, 2) + Mathf.Pow(hit.point.x - transform.position.x, 2));
             if (distance > maxHeight)
             {
                 Vector2 added = dir * maxHeight;
@@ -47,6 +47,7 @@ public class PlayerGroundedHandler : MonoBehaviour
                 Debug.DrawLine(transform.position, maxPosition, Color.yellow);
                 return;
             }
+            Debug.Log(this.name + " " + distance);
             foreach (string tag in tagsForActivation)
             {
                 if (hit.collider.gameObject.CompareTag(tag))
