@@ -36,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
     private float lastDashTime = 0;
     private float dashStartTime = 0;
     private bool dashLeft = true;
+    private bool usedDash = false;
 
     private float keepSpeed = 1;
 
@@ -174,6 +175,7 @@ public class PlayerMovement : MonoBehaviour
     private void CheckDash()
     {
         if (!hasDash) return;
+        if (usedDash) return;
         if (isDashing) return;
         if (Time.time < lastDashTime + dashCooldown) return;
         if (!movement.Dash.triggered) return;
@@ -184,6 +186,7 @@ public class PlayerMovement : MonoBehaviour
     private void StartDash()
     {
         isDashing = true;
+        usedDash = true;
         dashStartTime = Time.time;
         dashLeft = sprite.flipX;
         if (dashDeniesGravity)
@@ -222,5 +225,6 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = true;
         if (rigidbody.velocity.y > groundedSpeedDelta) return;
         usedDoubleJump = false;
+        usedDash = false;
     }
 }
