@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
-    [SerializeField] private int health;
-    [SerializeField] private int maxHealth;
-    [SerializeField] private int mana;
-    [SerializeField] private int maxMana;
-    [SerializeField] private int attackDamage;
-    [SerializeField] private int defense;
-    [SerializeField] private int speed;
-    
+    [SerializeField] public int health;
+    [SerializeField] public int maxHealth;
+    [SerializeField] public int mana;
+    [SerializeField] public int maxMana;
+    [SerializeField] public int attackDamage;
+    [SerializeField] public int defense;
+    [SerializeField] public int speed;
 }

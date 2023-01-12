@@ -939,6 +939,7 @@ MonoBehaviour:
   tagsForActivation:
   - Map
   - Platform
+  - Spike
   maxHeight: 0.015
 --- !u!1 &5517944348309776738
 GameObject:
@@ -972,6 +973,7 @@ MonoBehaviour:
   tagsForActivation:
   - Map
   - Platform
+  - Spike
   maxHeight: 0.015
 --- !u!1 &7652800021820199793
 GameObject:
@@ -1074,18 +1076,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   acceleration: 70
-  jumpForce: 35
   maxSpeedX: 13
   maxFallspeed: 25
   keepSpeedValue: 0.99
+  jumpForce: 35
   gravityScale: 10
   hasJump: 1
   hasDoubleJump: 1
+  groundedSpeedDelta: 0.001
   hasDash: 1
   dashDistance: 5
   dashDuration: 0.1
   dashCooldown: 1
-  groundedSpeedDelta: 0.001
   dashDeniesGravity: 1
   dashDeniesJump: 1
   dashDeniesDoubleJump: 1
@@ -1398,4 +1400,5 @@ MonoBehaviour:
   tagsForActivation:
   - Map
   - Platform
+  - Spike
   maxHeight: 0.015

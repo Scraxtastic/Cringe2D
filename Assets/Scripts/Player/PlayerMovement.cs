@@ -5,19 +5,22 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Movement")]
     [SerializeField] private float acceleration = 70f;
-    [SerializeField] private float jumpForce = 35;
     [SerializeField] private float maxSpeedX = 13f;
     [SerializeField] private float maxFallspeed = 25f;
     [SerializeField] private float keepSpeedValue = 0.99f;
+    [Header("Jump")]
+    [SerializeField] private float jumpForce = 35;
     [SerializeField] private float gravityScale = 10;
     [SerializeField] private bool hasJump = false;
     [SerializeField] private bool hasDoubleJump = false;
+    [SerializeField] private float groundedSpeedDelta = .001f;
+    [Header("Dash")]
     [SerializeField] private bool hasDash = false;
     [SerializeField] private float dashDistance = 5;
     [SerializeField] private float dashDuration = 0.1f;
     [SerializeField] private float dashCooldown = 1f;
-    [SerializeField] private float groundedSpeedDelta = .001f;
     [SerializeField] private bool dashDeniesGravity = true;
     [SerializeField] private bool dashDeniesJump = true;
     [SerializeField] private bool dashDeniesDoubleJump = true;
@@ -207,7 +210,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
         float dashSpeed = dashDistance / dashDuration;
-        Vector2 speed = new Vector3();
+        Vector2 speed = new Vector2();
         if (dashLeft)
         {
             speed.x -= dashSpeed;
@@ -216,7 +219,8 @@ public class PlayerMovement : MonoBehaviour
         {
             speed.x += dashSpeed;
         }
-        rigidbody.velocity += speed;
+        // Velocity => higher precision. AddForce makes us unable to tell how far we move
+        rigidbody.velocity = speed;
         lastDashTime = Time.time;
     }
 
